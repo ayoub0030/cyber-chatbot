@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaPaperPlane, FaLock, FaShieldAlt, FaImage, FaTimes, FaQuestionCircle } from 'react-icons/fa';
+import { FaPaperPlane, FaLock, FaShieldAlt, FaImage, FaTimes, FaQuestionCircle, FaKey } from 'react-icons/fa';
 import { getCyberResponse, analyzeImage } from '../services/geminiService';
 import ChatMessage from './ChatMessage';
+import PasswordAnalyzer from './PasswordAnalyzer';
 
 const ChatContainer = styled.div`
   display: flex;
@@ -225,27 +226,40 @@ const ImageQuestionInput = styled.input`
   }
 `;
 
+const FeatureButton = styled.button`
+  background: transparent;
+  color: white;
+  border: none;
+  margin-left: 15px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { text: "Hi there! I'm CyberJester, your cybersecurity companion with a sense of humor. How can I assist you today with digital security questions?", isBot: true }
+  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [imageData, setImageData] = useState(null);
-  const [imageQuestion, setImageQuestion] = useState('');
   const [showImageQuestion, setShowImageQuestion] = useState(false);
+  const [imageQuestion, setImageQuestion] = useState('');
+  const [showPasswordAnalyzer, setShowPasswordAnalyzer] = useState(false);
+  
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  
-  // Initial welcome message
-  useEffect(() => {
-    setMessages([
-      {
-        text: "Hello there! I'm CyberJester, your friendly cybersecurity assistant with a sense of humor. Ask me anything about cybersecurity, hacking, digital privacy, or related tech topics. You can also upload an image for me to analyze from a cybersecurity perspective!",
-        isBot: true
-      }
-    ]);
-  }, []);
 
-  // Auto-scroll to bottom when messages change
+  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -365,10 +379,21 @@ const Chat = () => {
           <FaShieldAlt size={24} />
           <h1>CyberJester</h1>
         </HeaderTitle>
-        <FaLock size={18} />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <FeatureButton 
+            onClick={() => setShowPasswordAnalyzer(!showPasswordAnalyzer)}
+            title="Password Strength Analyzer"
+          >
+            <FaKey size={14} />
+            {showPasswordAnalyzer ? 'Hide Analyzer' : 'Password Analyzer'}
+          </FeatureButton>
+          <FaLock size={18} style={{ marginLeft: '10px' }} />
+        </div>
       </ChatHeader>
       
       <ChatBody>
+        {showPasswordAnalyzer && <PasswordAnalyzer />}
+
         {messages.map((message, index) => (
           <ChatMessage 
             key={index} 
