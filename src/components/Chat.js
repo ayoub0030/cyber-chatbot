@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaPaperPlane, FaLock, FaShieldAlt, FaImage, FaTimes, FaQuestionCircle, FaKey } from 'react-icons/fa';
+import { FaPaperPlane, FaLock, FaShieldAlt, FaImage, FaTimes, FaQuestionCircle, FaKey, FaNewspaper, FaLightbulb } from 'react-icons/fa';
 import { getCyberResponse, analyzeImage } from '../services/geminiService';
 import ChatMessage from './ChatMessage';
 import PasswordAnalyzer from './PasswordAnalyzer';
+import SecurityNewsFeed from './SecurityNewsFeed';
+import SecurityTips from './SecurityTips';
 
 const ChatContainer = styled.div`
   display: flex;
@@ -255,6 +257,8 @@ const Chat = () => {
   const [showImageQuestion, setShowImageQuestion] = useState(false);
   const [imageQuestion, setImageQuestion] = useState('');
   const [showPasswordAnalyzer, setShowPasswordAnalyzer] = useState(false);
+  const [showNewsFeed, setShowNewsFeed] = useState(false);
+  const [showSecurityTips, setShowSecurityTips] = useState(false);
   
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -387,12 +391,28 @@ const Chat = () => {
             <FaKey size={14} />
             {showPasswordAnalyzer ? 'Hide Analyzer' : 'Password Analyzer'}
           </FeatureButton>
+          <FeatureButton 
+            onClick={() => setShowNewsFeed(!showNewsFeed)}
+            title="Cybersecurity News Feed"
+          >
+            <FaNewspaper size={14} />
+            {showNewsFeed ? 'Hide News' : 'Security News'}
+          </FeatureButton>
+          <FeatureButton 
+            onClick={() => setShowSecurityTips(!showSecurityTips)}
+            title="Security Tips & Best Practices"
+          >
+            <FaLightbulb size={14} />
+            {showSecurityTips ? 'Hide Tips' : 'Security Tips'}
+          </FeatureButton>
           <FaLock size={18} style={{ marginLeft: '10px' }} />
         </div>
       </ChatHeader>
       
       <ChatBody>
         {showPasswordAnalyzer && <PasswordAnalyzer />}
+        {showNewsFeed && <SecurityNewsFeed />}
+        {showSecurityTips && <SecurityTips />}
 
         {messages.map((message, index) => (
           <ChatMessage 
