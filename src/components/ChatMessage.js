@@ -56,7 +56,7 @@ const MessageImage = styled.img`
   display: block;
 `;
 
-const ChatMessage = ({ messag isBot, image }) => {
+const ChatMessage = ({ message, isBot, image }) => {
   // Convert boolean to string for DOM attributes
   const isBotString = String(isBot);
   
